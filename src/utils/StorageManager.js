@@ -32,29 +32,29 @@ const SYNC_STORE_NAME = "riot-web-sync";
 const CRYPTO_STORE_NAME = "matrix-js-sdk:crypto";
 
 function log(msg) {
-    console.log(`StorageManager: ${msg}`);
+    // console.log(`StorageManager: ${msg}`);
 }
 
 function error(msg) {
-    console.error(`StorageManager: ${msg}`);
+    // console.error(`StorageManager: ${msg}`);
 }
 
 function track(action) {
-    Analytics.trackEvent("StorageManager", action);
+    // Analytics.trackEvent("StorageManager", action);
 }
 
 export function tryPersistStorage() {
     if (navigator.storage && navigator.storage.persist) {
         navigator.storage.persist().then(persistent => {
-            console.log("StorageManager: Persistent?", persistent);
+            // console.log("StorageManager: Persistent?", persistent);
         });
     } else if (document.requestStorageAccess) { // Safari
-        document.requestStorageAccess().then(
+        document.requestStorageAccess()/*.then(
             () => console.log("StorageManager: Persistent?", true),
             () => console.log("StorageManager: Persistent?", false),
-        );
+        )*/;
     } else {
-        console.log("StorageManager: Persistence unsupported");
+        // console.log("StorageManager: Persistence unsupported");
     }
 }
 

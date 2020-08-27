@@ -281,7 +281,7 @@ export function replaceByRegexes(text: string, mapping: IVariables | Tags): stri
             // However, not showing count is so common that it's not worth logging. And other commonly unused variables
             // here, if there are any.
             if (regexpString !== '%\\(count\\)s') {
-                console.log(`Could not find ${regexp} in ${text}`);
+                // console.log(`Could not find ${regexp} in ${text}`);
             }
         }
     }
@@ -332,7 +332,7 @@ export function setLanguage(preferredLangs: string | string[]) {
         counterpart.registerTranslations(langToUse, langData);
         counterpart.setLocale(langToUse);
         SettingsStore.setValue("language", null, SettingLevel.DEVICE, langToUse);
-        console.log("set language to " + langToUse);
+        // console.log("set language to " + langToUse);
 
         // Set 'en' as fallback language:
         if (langToUse !== "en") {

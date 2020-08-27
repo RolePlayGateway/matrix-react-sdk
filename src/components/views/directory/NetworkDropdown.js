@@ -118,7 +118,7 @@ const NetworkDropdown = ({onOptionChange, protocols = {}, selectedServerName, se
             // we always show our connected HS, this takes precedence over it being configured or user-defined
             hsName,
             ...Array.from(configServers).filter(s => s !== hsName).sort(),
-            ...Array.from(removableServers).sort(),
+            // ...Array.from(removableServers).sort(),
         ];
 
         // For our own HS, we can use the instance_ids given in the third party protocols

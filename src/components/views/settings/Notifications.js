@@ -903,7 +903,7 @@ export default createReactClass({
 
                     { advancedSettings }
 
-                    { devicesSection }
+                    {/* devicesSection */}
 
                     { clearNotificationsButton }
                 </div>

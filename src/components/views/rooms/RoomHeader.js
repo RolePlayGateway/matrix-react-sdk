@@ -156,6 +156,7 @@ export default createReactClass({
         let cancelButton = null;
         let settingsButton = null;
         let pinnedEventsButton = null;
+        const SHOW_INTEGRATIONS_BUTTON = false;
 
         if (this.props.onCancelClick) {
             cancelButton = <CancelButton onClick={this.props.onCancelClick} />;
@@ -272,7 +273,7 @@ export default createReactClass({
         }
 
         let manageIntegsButton;
-        if (this.props.room && this.props.room.roomId && this.props.inRoom) {
+        if (this.props.room && this.props.room.roomId && this.props.inRoom && SHOW_INTEGRATIONS_BUTTON) {
             manageIntegsButton = <ManageIntegsButton room={this.props.room} />;
         }
 

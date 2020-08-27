@@ -166,17 +166,17 @@ class _MatrixClientPeg implements IMatrixClientPeg {
         for (const dbType of ['indexeddb', 'memory']) {
             try {
                 const promise = this.matrixClient.store.startup();
-                console.log("MatrixClientPeg: waiting for MatrixClient store to initialise");
+                // console.log("MatrixClientPeg: waiting for MatrixClient store to initialise");
                 await promise;
                 break;
             } catch (err) {
                 if (dbType === 'indexeddb') {
-                    console.error('Error starting matrixclient store - falling back to memory store', err);
+                    // console.error('Error starting matrixclient store - falling back to memory store', err);
                     this.matrixClient.store = new MemoryStore({
                         localStorage: localStorage,
                     });
                 } else {
-                    console.error('Failed to start memory store!', err);
+                    // console.error('Failed to start memory store!', err);
                     throw err;
                 }
             }
@@ -222,9 +222,9 @@ class _MatrixClientPeg implements IMatrixClientPeg {
     public async start(): Promise<any> {
         const opts = await this.assign();
 
-        console.log(`MatrixClientPeg: really starting MatrixClient`);
+        // console.log(`MatrixClientPeg: really starting MatrixClient`);
         await this.get().startClient(opts);
-        console.log(`MatrixClientPeg: MatrixClient started`);
+        // console.log(`MatrixClientPeg: MatrixClient started`);
     }
 
     public getCredentials(): IMatrixClientCreds {

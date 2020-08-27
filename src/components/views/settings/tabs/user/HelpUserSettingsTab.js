@@ -158,9 +158,9 @@ export default class HelpUserSettingsTab extends React.Component {
             },
             {
                 'a': (sub) => <a
-                    href="https://element.io/help"
-                    rel="noreferrer noopener"
-                    target="_blank"
+                    href="/#/user/@support:roleplaygateway.com?action=chat"
+                    // rel="noreferrer noopener"
+                    // target="_blank"
                 >
                     {sub}
                 </a>,
@@ -208,27 +208,28 @@ export default class HelpUserSettingsTab extends React.Component {
             <div className="mx_SettingsTab mx_HelpUserSettingsTab">
                 <div className="mx_SettingsTab_heading">{_t("Help & About")}</div>
                 <div className="mx_SettingsTab_section">
-                    <span className='mx_SettingsTab_subheading'>{_t('Bug reporting')}</span>
+                    { /* <span className='mx_SettingsTab_subheading'>{_t('Bug reporting')}</span> */ }
                     <div className='mx_SettingsTab_subsectionText'>
-                        {
+                        {/*
                             _t( "If you've submitted a bug via GitHub, debug logs can help " +
                                 "us track down the problem. Debug logs contain application " +
                                 "usage data including your username, the IDs or aliases of " +
                                 "the rooms or groups you have visited and the usernames of " +
                                 "other users. They do not contain messages.",
                             )
-                        }
-                        <div className='mx_HelpUserSettingsTab_debugButton'>
+                        */}
+                        {/* <div className='mx_HelpUserSettingsTab_debugButton'>
                             <AccessibleButton onClick={this._onBugReport} kind='primary'>
                                 {_t("Submit debug logs")}
                             </AccessibleButton>
-                        </div>
+                      </div> */}
                         <div className='mx_HelpUserSettingsTab_debugButton'>
                             <AccessibleButton onClick={this._onClearCacheAndReload} kind='danger'>
                                 {_t("Clear cache and reload")}
                             </AccessibleButton>
                         </div>
                         {
+                          /*
                             _t( "To report a Matrix-related security issue, please read the Matrix.org " +
                                 "<a>Security Disclosure Policy</a>.", {},
                                 {
@@ -236,13 +237,14 @@ export default class HelpUserSettingsTab extends React.Component {
                                         <a href="https://matrix.org/security-disclosure-policy/"
                                         rel="noreferrer noopener" target="_blank">{sub}</a>,
                                 })
+                          */
                         }
                     </div>
                 </div>
                 <div className='mx_SettingsTab_section'>
                     <span className='mx_SettingsTab_subheading'>{_t("FAQ")}</span>
                     <div className='mx_SettingsTab_subsectionText'>
-                        {faqText}
+                        {/* faqText */}
                     </div>
                     <AccessibleButton kind="primary" onClick={KeyboardShortcuts.toggleDialog}>
                         { _t("Keyboard Shortcuts") }
@@ -257,12 +259,9 @@ export default class HelpUserSettingsTab extends React.Component {
                     </div>
                 </div>
                 {this._renderLegal()}
-                {this._renderCredits()}
                 <div className='mx_SettingsTab_section mx_HelpUserSettingsTab_versions'>
                     <span className='mx_SettingsTab_subheading'>{_t("Advanced")}</span>
                     <div className='mx_SettingsTab_subsectionText'>
-                        {_t("Homeserver is")} <code>{MatrixClientPeg.get().getHomeserverUrl()}</code><br />
-                        {_t("Identity Server is")} <code>{MatrixClientPeg.get().getIdentityServerUrl()}</code><br />
                         {_t("Access Token:") + ' '}
                         <AccessibleButton element="span" onClick={this._showSpoiler}
                                           data-spoiler={MatrixClientPeg.get().getAccessToken()}>

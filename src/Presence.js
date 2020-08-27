@@ -97,9 +97,9 @@ class Presence {
 
         try {
             await MatrixClientPeg.get().setPresence(this.state);
-            console.info("Presence: %s", newState);
+            // console.info("Presence: %s", newState);
         } catch (err) {
-            console.error("Failed to set presence: %s", err);
+            // console.error("Failed to set presence: %s", err);
             this.state = oldState;
         }
     }

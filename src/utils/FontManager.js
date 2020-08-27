@@ -45,7 +45,7 @@ function safariVersionCheck(ua) {
 }
 
 async function isColrFontSupported() {
-    console.log("Checking for COLR support");
+    // console.log("Checking for COLR support");
 
     const {userAgent} = navigator;
     // Firefox has supported COLR fonts since version 26
@@ -53,7 +53,7 @@ async function isColrFontSupported() {
     // "Extract canvas data" permissions
     // when content blocking is enabled.
     if (userAgent.includes("Firefox")) {
-        console.log("Browser is Firefox - assuming COLR is supported");
+        // console.log("Browser is Firefox - assuming COLR is supported");
         return true;
     }
     // Safari doesn't wait for the font to load (if it doesn't have it in cache)
@@ -87,15 +87,15 @@ async function isColrFontSupported() {
 
         img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
 
-        console.log("Waiting for COLR SVG to load");
+        // console.log("Waiting for COLR SVG to load");
         await new Promise(resolve => img.onload = resolve);
-        console.log("Drawing canvas to detect COLR support");
+        // console.log("Drawing canvas to detect COLR support");
         context.drawImage(img, 0, 0);
         const colrFontSupported = (context.getImageData(10, 10, 1, 1).data[0] === 200);
-        console.log("Canvas check revealed COLR is supported? " + colrFontSupported);
+        // console.log("Canvas check revealed COLR is supported? " + colrFontSupported);
         return colrFontSupported;
     } catch (e) {
-        console.error("Couldn't load COLR font", e);
+        // console.error("Couldn't load COLR font", e);
         return false;
     }
 }

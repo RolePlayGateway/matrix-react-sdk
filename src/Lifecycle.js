@@ -229,7 +229,7 @@ export function handleInvalidStoreError(e) {
 }
 
 function _registerAsGuest(hsUrl, isUrl, defaultDeviceDisplayName) {
-    console.log(`Doing guest login on ${hsUrl}`);
+    // console.log(`Doing guest login on ${hsUrl}`);
 
     // create a temporary MatrixClient to do the login
     const client = Matrix.createClient({
@@ -241,7 +241,7 @@ function _registerAsGuest(hsUrl, isUrl, defaultDeviceDisplayName) {
             initial_device_display_name: defaultDeviceDisplayName,
         },
     }).then((creds) => {
-        console.log(`Registered as guest: ${creds.user_id}`);
+        // console.log(`Registered as guest: ${creds.user_id}`);
         return _doSetLoggedIn({
             userId: creds.user_id,
             deviceId: creds.device_id,
@@ -251,7 +251,7 @@ function _registerAsGuest(hsUrl, isUrl, defaultDeviceDisplayName) {
             guest: true,
         }, true).then(() => true);
     }, (err) => {
-        console.error("Failed to register as guest", err);
+        // console.error("Failed to register as guest", err);
         return false;
     });
 }
@@ -306,12 +306,12 @@ async function _restoreFromLocalStorage(opts) {
 
         const pickleKey = await PlatformPeg.get().getPickleKey(userId, deviceId);
         if (pickleKey) {
-            console.log("Got pickle key");
+            // console.log("Got pickle key");
         } else {
-            console.log("No pickle key available");
+            // console.log("No pickle key available");
         }
 
-        console.log(`Restoring session for ${userId}`);
+        // console.log(`Restoring session for ${userId}`);
         await _doSetLoggedIn({
             userId: userId,
             deviceId: deviceId,
@@ -323,13 +323,13 @@ async function _restoreFromLocalStorage(opts) {
         }, false);
         return true;
     } else {
-        console.log("No previous session found.");
+        // console.log("No previous session found.");
         return false;
     }
 }
 
 async function _handleLoadSessionFailure(e) {
-    console.error("Unable to load session", e);
+    // console.error("Unable to load session", e);
 
     const SessionRestoreErrorDialog =
           sdk.getComponent('views.dialogs.SessionRestoreErrorDialog');
@@ -422,13 +422,13 @@ async function _doSetLoggedIn(credentials, clearStorage) {
 
     const softLogout = isSoftLogout();
 
-    console.log(
+    /* console.log(
         "setLoggedIn: mxid: " + credentials.userId +
         " deviceId: " + credentials.deviceId +
         " guest: " + credentials.guest +
         " hs: " + credentials.homeserverUrl +
         " softLogout: " + softLogout,
-    );
+    ); */
 
     // This is dispatched to indicate that the user is still in the process of logging in
     // because async code may take some time to resolve, breaking the assumption that
@@ -601,7 +601,7 @@ export function isLoggingOut() {
  * syncing the client.
  */
 async function startMatrixClient(startSyncing=true) {
-    console.log(`Lifecycle: Starting MatrixClient`);
+    // console.log(`Lifecycle: Starting MatrixClient`);
 
     // dispatch this before starting the matrix client: it's used
     // to add listeners for the 'sync' event so otherwise we'd have

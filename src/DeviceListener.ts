@@ -179,6 +179,7 @@ export default class DeviceListener {
 
     async _recheck() {
         const cli = MatrixClientPeg.get();
+        const ENABLE_PROMPTS = false;
 
         if (!await cli.doesServerSupportUnstableFeature("org.matrix.e2e_cross_signing")) return;
 
@@ -243,15 +244,17 @@ export default class DeviceListener {
         }
 
         // Display or hide the batch toast for old unverified sessions
-        if (oldUnverifiedDeviceIds.size > 0) {
+        if (oldUnverifiedDeviceIds.size > 0 && ENABLE_PROMPTS) {
             showBulkUnverifiedSessionsToast(oldUnverifiedDeviceIds);
         } else {
             hideBulkUnverifiedSessionsToast();
         }
 
-        // Show toasts for new unverified devices if they aren't already there
-        for (const deviceId of newUnverifiedDeviceIds) {
-            showUnverifiedSessionsToast(deviceId);
+        if (ENABLE_PROMPTS) {
+          // Show toasts for new unverified devices if they aren't already there
+          for (const deviceId of newUnverifiedDeviceIds) {
+              showUnverifiedSessionsToast(deviceId);
+          }
         }
 
         // ...and hide any we don't need any more

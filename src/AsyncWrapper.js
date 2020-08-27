@@ -42,7 +42,7 @@ export default createReactClass({
         this._unmounted = false;
         // XXX: temporary logging to try to diagnose
         // https://github.com/vector-im/element-web/issues/3148
-        console.log('Starting load of AsyncWrapper for modal');
+        // console.log('Starting load of AsyncWrapper for modal');
         this.props.prom.then((result) => {
             if (this._unmounted) {
                 return;
@@ -53,7 +53,7 @@ export default createReactClass({
             const component = result.default ? result.default : result;
             this.setState({component});
         }).catch((e) => {
-            console.warn('AsyncWrapper promise failed', e);
+            // console.warn('AsyncWrapper promise failed', e);
             this.setState({error: e});
         });
     },

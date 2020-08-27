@@ -105,7 +105,7 @@ export default class ThemeWatcher {
         const systemThemeExplicit = SettingsStore.getValueAt(
             SettingLevel.DEVICE, "use_system_theme", null, false, true);
         if (systemThemeExplicit) {
-            console.log("returning explicit system theme");
+            // console.log("returning explicit system theme");
             if (this.preferDark.matches) return 'dark';
             if (this.preferLight.matches) return 'light';
         }
@@ -116,7 +116,7 @@ export default class ThemeWatcher {
         const themeExplicit = SettingsStore.getValueAt(
             SettingLevel.DEVICE, "theme", null, false, true);
         if (themeExplicit) {
-            console.log("returning explicit theme: " + themeExplicit);
+            // console.log("returning explicit theme: " + themeExplicit);
             return themeExplicit;
         }
 
@@ -126,7 +126,7 @@ export default class ThemeWatcher {
             if (this.preferDark.matches) return 'dark';
             if (this.preferLight.matches) return 'light';
         }
-        console.log("returning theme value");
+        // console.log("returning theme value");
         return SettingsStore.getValue('theme');
     }
 

@@ -835,14 +835,14 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
         this.focusComposer = true;
 
         if (roomInfo.room_alias) {
-            console.log(
+            /* console.log(
                 `Switching to room alias ${roomInfo.room_alias} at event ` +
                 roomInfo.event_id,
-            );
+            ); */
         } else {
-            console.log(`Switching to room id ${roomInfo.room_id} at event ` +
+            /* console.log(`Switching to room id ${roomInfo.room_id} at event ` +
                 roomInfo.event_id,
-            );
+            ); */
         }
 
         // Wait for the first sync to complete so that if a room does have an alias,
@@ -850,7 +850,7 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
         let waitFor = Promise.resolve(null);
         if (!this.firstSyncComplete) {
             if (!this.firstSyncPromise) {
-                console.warn('Cannot view a room before first sync. room_id:', roomInfo.room_id);
+                // console.warn('Cannot view a room before first sync. room_id:', roomInfo.room_id);
                 return;
             }
             waitFor = this.firstSyncPromise.promise;
@@ -1361,7 +1361,7 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
             if (state === "SYNCING" && prevState === "SYNCING") {
                 return;
             }
-            console.info("MatrixClient sync state => %s", state);
+            // console.info("MatrixClient sync state => %s", state);
             if (state !== "PREPARED") { return; }
 
             this.firstSyncComplete = true;

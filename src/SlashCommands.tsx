@@ -142,6 +142,20 @@ function success(promise?: Promise<any>) {
 
 export const Commands = [
     new Command({
+        command: 'call',
+        args: '',
+        description: `Starts a new call in this channel.`,
+        runFn: function(roomId, args) {
+            dis.dispatch({
+                action: 'place_call',
+                type: "voice",
+                room_id: roomId,
+            });
+            return success();
+        },
+        category: CommandCategories.messages,
+    }),
+    /* new Command({
         command: 'shrug',
         args: '<message>',
         description: _td('Prepends ¯\\_(ツ)_/¯ to a plain-text message'),
@@ -153,7 +167,7 @@ export const Commands = [
             return success(MatrixClientPeg.get().sendTextMessage(roomId, message));
         },
         category: CommandCategories.messages,
-    }),
+    }), */
     new Command({
         command: 'plain',
         args: '<message>',
@@ -172,7 +186,7 @@ export const Commands = [
         },
         category: CommandCategories.messages,
     }),
-    new Command({
+    /* new Command({
         command: 'ddg',
         args: '<query>',
         description: _td('Searches DuckDuckGo for results'),
@@ -187,7 +201,7 @@ export const Commands = [
         },
         category: CommandCategories.actions,
         hideCompletionAfterSpace: true,
-    }),
+    }), */
     new Command({
         command: 'upgraderoom',
         args: '<new_version>',
@@ -270,7 +284,7 @@ export const Commands = [
         },
         category: CommandCategories.actions,
     }),
-    new Command({
+    /* new Command({
         command: 'myroomnick',
         aliases: ['roomnick'],
         args: '<display_name>',
@@ -348,7 +362,7 @@ export const Commands = [
             }));
         },
         category: CommandCategories.actions,
-    }),
+    }), */
     new Command({
         command: 'topic',
         args: '[<topic>]',
@@ -375,7 +389,7 @@ export const Commands = [
         },
         category: CommandCategories.admin,
     }),
-    new Command({
+    /* new Command({
         command: 'roomname',
         args: '<name>',
         description: _td('Sets the room name'),
@@ -386,7 +400,7 @@ export const Commands = [
             return reject(this.getUsage());
         },
         category: CommandCategories.admin,
-    }),
+    }), */
     new Command({
         command: 'invite',
         args: '<user-id>',
@@ -767,7 +781,7 @@ export const Commands = [
         },
         category: CommandCategories.admin,
     }),
-    new Command({
+    /* new Command({
         command: 'devtools',
         description: _td('Opens the Developer Tools dialog'),
         runFn: function(roomId) {
@@ -927,7 +941,7 @@ export const Commands = [
             return success(MatrixClientPeg.get().sendHtmlEmote(roomId, args, textToHtmlRainbow(args)));
         },
         category: CommandCategories.messages,
-    }),
+    }), */
     new Command({
         command: "help",
         description: _td("Displays list of commands with usages and descriptions"),
@@ -959,7 +973,7 @@ export const Commands = [
         },
         category: CommandCategories.advanced,
     }),
-    new Command({
+    /* new Command({
         command: "rageshake",
         aliases: ["bugreport"],
         description: _td("Send a bug report with logs"),
@@ -979,7 +993,7 @@ export const Commands = [
             );
         },
         category: CommandCategories.advanced,
-    }),
+    }), */
     new Command({
         command: "query",
         description: _td("Opens chat with the given user"),

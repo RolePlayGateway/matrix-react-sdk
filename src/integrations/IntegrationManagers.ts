@@ -85,12 +85,12 @@ export class IntegrationManagers {
     }
 
     private setupHomeserverManagers = async (discoveryResponse) => {
-        console.log("Updating homeserver-configured integration managers...");
+        // console.log("Updating homeserver-configured integration managers...");
         if (discoveryResponse && discoveryResponse['m.integrations']) {
             let managers = discoveryResponse['m.integrations']['managers'];
             if (!Array.isArray(managers)) managers = []; // make it an array so we can wipe the HS managers
 
-            console.log(`Homeserver has ${managers.length} integration managers`);
+            // console.log(`Homeserver has ${managers.length} integration managers`);
 
             // Clear out any known managers for the homeserver
             // TODO: Log out of the scalar clients
@@ -108,7 +108,7 @@ export class IntegrationManagers {
 
             this.primaryManager = null; // reset primary
         } else {
-            console.log("Homeserver has no integration managers");
+            // console.log("Homeserver has no integration managers");
         }
     };
 

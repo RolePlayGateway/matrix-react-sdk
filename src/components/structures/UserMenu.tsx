@@ -276,11 +276,11 @@ export default class UserMenu extends React.Component<IProps, IState> {
                     label={_t("Archived rooms")}
                     onClick={this.onShowArchived}
                 /> */}
-                <IconizedContextMenuOption
+                {/*<IconizedContextMenuOption
                     iconClassName="mx_UserMenu_iconMessage"
                     label={_t("Feedback")}
                     onClick={this.onProvideFeedback}
-                />
+                /> */}
             </IconizedContextMenuOptionList>
             <IconizedContextMenuOptionList red>
                 <IconizedContextMenuOption

@@ -8,13 +8,13 @@
 /* Noto Color Emoji contains digits, in fixed-width, therefore causing
    digits in flowed text to stand out.
    TODO: Consider putting all emoji fonts to the end rather than the front. */
-$font-family: Inter, Twemoji, 'Apple Color Emoji', 'Segoe UI Emoji', Arial, Helvetica, Sans-Serif, 'Noto Color Emoji';
+$font-family: Arvo, Twemoji, 'Apple Color Emoji', 'Segoe UI Emoji', Arial, Helvetica, Sans-Serif, 'Noto Color Emoji';
 
 $monospace-font-family: Inconsolata, Twemoji, 'Apple Color Emoji', 'Segoe UI Emoji', Courier, monospace, 'Noto Color Emoji';
 
 // unified palette
 // try to use these colors when possible
-$accent-color: #0DBD8B;
+$accent-color: #5f8d70;
 $accent-bg-color: rgba(3, 179, 129, 0.16);
 $notice-primary-color: #ff4b55;
 $notice-primary-bg-color: rgba(255, 75, 85, 0.16);
