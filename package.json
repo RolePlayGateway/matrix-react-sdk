@@ -54,6 +54,8 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.10.5",
+    "@fabric/core": "martindale/fabric#peering-wallet",
+    "@fabric/http": "martindale/web#forge-demo",
     "await-lock": "^2.0.1",
     "blueimp-canvas-to-blob": "^3.27.0",
     "browser-encrypt-attachment": "^0.3.0",

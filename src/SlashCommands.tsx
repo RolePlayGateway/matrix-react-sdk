@@ -45,6 +45,8 @@ import { ViewUserPayload } from "./dispatcher/payloads/ViewUserPayload";
 import { Action } from "./dispatcher/actions";
 import { EffectiveMembership, getEffectiveMembership } from "./utils/membership";
 
+const Remote = require('@fabric/core/types/remote');
+
 // XXX: workaround for https://github.com/microsoft/TypeScript/issues/31816
 interface HTMLInputEvent extends Event {
     target: HTMLInputElement & EventTarget;
@@ -136,14 +138,92 @@ function success(promise?: Promise<any>) {
     return {promise};
 }
 
+function _upgradeRoom(roomId, args) {
+  if (args) {
+      const cli = MatrixClientPeg.get();
+      const room = cli.getRoom(roomId);
+      if (!room.currentState.mayClientSendStateEvent("m.room.tombstone", cli)) {
+          return reject(_t("You do not have the required permissions to use this command."));
+      }
+
+      const RoomUpgradeWarningDialog = sdk.getComponent("dialogs.RoomUpgradeWarningDialog");
+
+      const {finished} = Modal.createTrackedDialog('Slash Commands', 'upgrade room confirmation',
+          RoomUpgradeWarningDialog, {roomId: roomId, targetVersion: args}, /*className=*/null,
+          /*isPriority=*/false, /*isStatic=*/true);
+
+      return success(finished.then(async ([resp]) => {
+          if (!resp.continue) return;
+
+          let checkForUpgradeFn;
+          try {
+              const upgradePromise = cli.upgradeRoom(roomId, args);
+
+              // We have to wait for the js-sdk to give us the room back so
+              // we can more effectively abuse the MultiInviter behaviour
+              // which heavily relies on the Room object being available.
+              if (resp.invite) {
+                  checkForUpgradeFn = async (newRoom) => {
+                      // The upgradePromise should be done by the time we await it here.
+                      const {replacement_room: newRoomId} = await upgradePromise;
+                      if (newRoom.roomId !== newRoomId) return;
+
+                      const toInvite = [
+                          ...room.getMembersWithMembership("join"),
+                          ...room.getMembersWithMembership("invite"),
+                      ].map(m => m.userId).filter(m => m !== cli.getUserId());
+
+                      if (toInvite.length > 0) {
+                          // Errors are handled internally to this function
+                          await inviteUsersToRoom(newRoomId, toInvite);
+                      }
+
+                      cli.removeListener('Room', checkForUpgradeFn);
+                  };
+                  cli.on('Room', checkForUpgradeFn);
+              }
+
+              // We have to await after so that the checkForUpgradesFn has a proper reference
+              // to the new room's ID.
+              await upgradePromise;
+          } catch (e) {
+              console.error(e);
+
+              if (checkForUpgradeFn) cli.removeListener('Room', checkForUpgradeFn);
+
+              const ErrorDialog = sdk.getComponent('dialogs.ErrorDialog');
+              Modal.createTrackedDialog('Slash Commands', 'room upgrade error', ErrorDialog, {
+                  title: _t('Error upgrading room'),
+                  description: _t(
+                      'Double check that your server supports the room version chosen and try again.'),
+              });
+          }
+      }));
+  }
+  return reject(this.getUsage());
+}
+
+const ENABLE_RPG_COMMANDS = true;
+const api = new Remote({
+  authority: 'api.roleplaygateway.com'
+});
+
+// TODO: import from external module
+const RPGCommands = [
+
+];
+
 /* Disable the "unexpected this" error for these commands - all of the run
  * functions are called with `this` bound to the Command instance.
  */
 
-export const Commands = [
-    new Command({
+let CommandList = [];
+
+const matrixCommands = [
+    /* new Command({
         command: 'call',
         args: '',
+        // description: _td('Prepends ¯\\_(ツ)_/¯ to a plain-text message'),
         description: `Starts a new call in this channel.`,
         runFn: function(roomId, args) {
             dis.dispatch({
@@ -154,7 +234,7 @@ export const Commands = [
             return success();
         },
         category: CommandCategories.messages,
-    }),
+    }), */
     /* new Command({
         command: 'shrug',
         args: '<message>',
@@ -168,7 +248,7 @@ export const Commands = [
         },
         category: CommandCategories.messages,
     }), */
-    new Command({
+    /* new Command({
         command: 'plain',
         args: '<message>',
         description: _td('Sends a message as plain text, without interpreting it as markdown'),
@@ -176,8 +256,8 @@ export const Commands = [
             return success(MatrixClientPeg.get().sendTextMessage(roomId, messages));
         },
         category: CommandCategories.messages,
-    }),
-    new Command({
+    }), */
+    /* new Command({
         command: 'html',
         args: '<message>',
         description: _td('Sends a message as html, without interpreting it as markdown'),
@@ -185,7 +265,7 @@ export const Commands = [
             return success(MatrixClientPeg.get().sendHtmlMessage(roomId, messages, messages));
         },
         category: CommandCategories.messages,
-    }),
+    }), */
     /* new Command({
         command: 'ddg',
         args: '<query>',
@@ -202,76 +282,13 @@ export const Commands = [
         category: CommandCategories.actions,
         hideCompletionAfterSpace: true,
     }), */
-    new Command({
+    /* new Command({
         command: 'upgraderoom',
         args: '<new_version>',
         description: _td('Upgrades a room to a new version'),
-        runFn: function(roomId, args) {
-            if (args) {
-                const cli = MatrixClientPeg.get();
-                const room = cli.getRoom(roomId);
-                if (!room.currentState.mayClientSendStateEvent("m.room.tombstone", cli)) {
-                    return reject(_t("You do not have the required permissions to use this command."));
-                }
-
-                const RoomUpgradeWarningDialog = sdk.getComponent("dialogs.RoomUpgradeWarningDialog");
-
-                const {finished} = Modal.createTrackedDialog('Slash Commands', 'upgrade room confirmation',
-                    RoomUpgradeWarningDialog, {roomId: roomId, targetVersion: args}, /*className=*/null,
-                    /*isPriority=*/false, /*isStatic=*/true);
-
-                return success(finished.then(async ([resp]) => {
-                    if (!resp.continue) return;
-
-                    let checkForUpgradeFn;
-                    try {
-                        const upgradePromise = cli.upgradeRoom(roomId, args);
-
-                        // We have to wait for the js-sdk to give us the room back so
-                        // we can more effectively abuse the MultiInviter behaviour
-                        // which heavily relies on the Room object being available.
-                        if (resp.invite) {
-                            checkForUpgradeFn = async (newRoom) => {
-                                // The upgradePromise should be done by the time we await it here.
-                                const {replacement_room: newRoomId} = await upgradePromise;
-                                if (newRoom.roomId !== newRoomId) return;
-
-                                const toInvite = [
-                                    ...room.getMembersWithMembership("join"),
-                                    ...room.getMembersWithMembership("invite"),
-                                ].map(m => m.userId).filter(m => m !== cli.getUserId());
-
-                                if (toInvite.length > 0) {
-                                    // Errors are handled internally to this function
-                                    await inviteUsersToRoom(newRoomId, toInvite);
-                                }
-
-                                cli.removeListener('Room', checkForUpgradeFn);
-                            };
-                            cli.on('Room', checkForUpgradeFn);
-                        }
-
-                        // We have to await after so that the checkForUpgradesFn has a proper reference
-                        // to the new room's ID.
-                        await upgradePromise;
-                    } catch (e) {
-                        console.error(e);
-
-                        if (checkForUpgradeFn) cli.removeListener('Room', checkForUpgradeFn);
-
-                        const ErrorDialog = sdk.getComponent('dialogs.ErrorDialog');
-                        Modal.createTrackedDialog('Slash Commands', 'room upgrade error', ErrorDialog, {
-                            title: _t('Error upgrading room'),
-                            description: _t(
-                                'Double check that your server supports the room version chosen and try again.'),
-                        });
-                    }
-                }));
-            }
-            return reject(this.getUsage());
-        },
+        runFn: _upgradeRoom,
         category: CommandCategories.admin,
-    }),
+    }), */
     new Command({
         command: 'nick',
         args: '<display_name>',
@@ -760,7 +777,7 @@ export const Commands = [
         },
         category: CommandCategories.admin,
     }),
-    new Command({
+    /* new Command({
         command: 'deop',
         args: '<user-id>',
         description: _td('Deops user with given id'),
@@ -780,7 +797,7 @@ export const Commands = [
             return reject(this.getUsage());
         },
         category: CommandCategories.admin,
-    }),
+    }), */
     /* new Command({
         command: 'devtools',
         description: _td('Opens the Developer Tools dialog'),
@@ -953,7 +970,7 @@ export const Commands = [
         },
         category: CommandCategories.advanced,
     }),
-    new Command({
+    /* new Command({
         command: "whois",
         description: _td("Displays information about a user"),
         args: "<user-id>",
@@ -972,7 +989,7 @@ export const Commands = [
             return success();
         },
         category: CommandCategories.advanced,
-    }),
+    }), */
     /* new Command({
         command: "rageshake",
         aliases: ["bugreport"],
@@ -994,7 +1011,7 @@ export const Commands = [
         },
         category: CommandCategories.advanced,
     }), */
-    new Command({
+    /* new Command({
         command: "query",
         description: _td("Opens chat with the given user"),
         args: "<user-id>",
@@ -1011,7 +1028,7 @@ export const Commands = [
             })());
         },
         category: CommandCategories.actions,
-    }),
+    }), */
     new Command({
         command: "msg",
         description: _td("Sends a message to the given user"),
@@ -1051,6 +1068,14 @@ export const Commands = [
         hideCompletionAfterSpace: true,
     }),
 ];
+
+if (ENABLE_RPG_COMMANDS) {
+  CommandList = CommandList.concat(RPGCommands);
+}
+
+CommandList = CommandList.concat(matrixCommands);
+
+export const Commands = CommandList;
 
 // build a map from names and aliases to the Command objects.
 export const CommandMap = new Map();

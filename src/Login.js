@@ -90,6 +90,10 @@ export default class Login {
 
         const isEmail = username.indexOf("@") > 0;
 
+        if (!isEmail) {
+            username = username.toLowerCase();
+        }
+
         let identifier;
         if (phoneCountry && phoneNumber) {
             identifier = {
